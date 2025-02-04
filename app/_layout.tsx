@@ -12,27 +12,38 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  // Determine the user's system color scheme (light or dark mode)
   const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+
+  // Load custom fonts
+  const [fontsLoaded] = useFonts({
+    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'), // Add more fonts here as needed
   });
 
+  // Hide the splash screen once fonts and assets are loaded
   useEffect(() => {
-    if (loaded) {
+    if (fontsLoaded) {
       SplashScreen.hideAsync();
     }
-  }, [loaded]);
+  }, [fontsLoaded]);
 
-  if (!loaded) {
+  // Return null while fonts are still loading
+  if (!fontsLoaded) {
     return null;
   }
 
   return (
+    // Apply the appropriate theme based on the system's color scheme
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      {/* Stack navigation */}
       <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        {/* Main screen with tabs */}
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+        {/* 404 Not Found screen */}
         <Stack.Screen name="+not-found" />
       </Stack>
+
+      {/* Status bar styling */}
       <StatusBar style="auto" />
     </ThemeProvider>
   );
